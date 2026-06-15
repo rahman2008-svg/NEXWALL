@@ -15,41 +15,32 @@ cache:
 triggering:
   events:
     - push
-      pull_request
+    - pull_request
+
   branch_patterns:
     - pattern: main
       include: true
       source: true
-    - pattern: master
-      include: true
-      source: true
 
 scripts:
-  - name: Grant Gradle Permission
-    script: |
-      chmod +x gradlew
+  - name: Grant Execute Permission
+    script: chmod +x gradlew
 
-  - name: Verify Gradle Wrapper
-    script: |
-      ./gradlew --version
+  - name: Check Gradle
+    script: ./gradlew --version
 
   - name: Clean Project
-    script: |
-      ./gradlew clean
+    script: ./gradlew clean
 
   - name: Build Debug APK
-    script: |
-      ./gradlew assembleDebug --stacktrace --warning-mode all
+    script: ./gradlew assembleDebug --stacktrace
 
 artifacts:
-  - app/build/outputs/apk/**/*.apk
-  - app/build/outputs/bundle/**/*.aab
-  - app/build/reports/**
+  - app/build/outputs/**/*.apk
+  - app/build/outputs/**/*.aab
+  - app/build/reports/**/*
 
 publishing:
   email:
     recipients:
       - your-email@example.com
-    notify:
-      success: true
-      failure: true
