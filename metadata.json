@@ -1,0 +1,6 @@
+{
+  "name": "NexWall Studio X",
+  "description": "An elegant, production-ready HD wallpaper application featuring curated categories, secure local favorites, downloading, and home/lock screen customizers.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
