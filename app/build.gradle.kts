@@ -20,20 +20,30 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
 
-    // ✅ FIXED SIGNING (NO BROKEN KEYS)
+    // ✅ SAFE SIGNING CONFIG (FIXED)
     signingConfigs {
+
+        // RELEASE (CI / Play Store safe)
         create("release") {
             val keystorePath =
                 System.getenv("KEYSTORE_PATH") ?: "${rootDir}/my-upload-key.jks"
 
-            storeFile = file(keystorePath)
-            storePassword = System.getenv("STORE_PASSWORD")
-            keyAlias = System.getenv("KEY_ALIAS") ?: "upload"
-            keyPassword = System.getenv("KEY_PASSWORD")
+            if (file(keystorePath).exists()) {
+                storeFile = file(keystorePath)
+                storePassword = System.getenv("STORE_PASSWORD") ?: ""
+                keyAlias = System.getenv("KEY_ALIAS") ?: "upload"
+                keyPassword = System.getenv("KEY_PASSWORD") ?: ""
+            }
         }
     }
 
     buildTypes {
+
+        debug {
+            // use default debug keystore
+            isDebuggable = true
+        }
+
         release {
             isMinifyEnabled = false
             isCrunchPngs = false
@@ -43,13 +53,12 @@ android {
                 "proguard-rules.pro"
             )
 
-            signingConfig = signingConfigs.getByName("release")
-        }
+            // ✅ SAFE CHECK (prevents crash if keystore missing)
+            val ks = System.getenv("KEYSTORE_PATH") ?: "${rootDir}/my-upload-key.jks"
 
-        debug {
-            // ✅ IMPORTANT FIX:
-            // REMOVE CUSTOM debugConfig (THIS WAS CAUSING YOUR ERROR)
-            signingConfig = signingConfigs.getByName("debug")
+            if (file(ks).exists()) {
+                signingConfig = signingConfigs.getByName("release")
+            }
         }
     }
 
@@ -77,6 +86,7 @@ secrets {
 }
 
 dependencies {
+
     implementation(platform(libs.androidx.compose.bom))
     implementation(platform(libs.firebase.bom))
 
