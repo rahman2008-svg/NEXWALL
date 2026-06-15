@@ -1,0 +1,45 @@
+workflows:
+nexwall-studio-x:
+name: NexWall Studio X Android Build
+
+max_build_duration: 60
+
+environment:
+  java: 17
+
+cache:
+  cache_paths:
+    - ~/.gradle/caches
+    - ~/.gradle/wrapper
+
+triggering:
+  events:
+    - push
+  branch_patterns:
+    - pattern: main
+      include: true
+      source: true
+    - pattern: master
+      include: true
+      source: true
+
+scripts:
+  - name: Grant execute permission
+    script: |
+      chmod +x gradlew
+
+  - name: Clean Project
+    script: |
+      ./gradlew clean
+
+  - name: Build Debug APK
+    script: |
+      ./gradlew assembleDebug
+
+artifacts:
+  - app/build/outputs/**/*.apk
+
+publishing:
+  email:
+    recipients:
+      - your-email@example.com
