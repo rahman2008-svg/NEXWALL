@@ -24,9 +24,13 @@ triggering:
       source: true
 
 scripts:
-  - name: Grant execute permission
+  - name: Grant Gradle Permission
     script: |
       chmod +x gradlew
+
+  - name: Show Gradle Version
+    script: |
+      ./gradlew --version
 
   - name: Clean Project
     script: |
@@ -34,10 +38,11 @@ scripts:
 
   - name: Build Debug APK
     script: |
-      ./gradlew assembleDebug
+      ./gradlew assembleDebug --stacktrace
 
 artifacts:
   - app/build/outputs/**/*.apk
+  - app/build/outputs/**/*.aab
 
 publishing:
   email:
