@@ -1,13 +1,13 @@
 workflows:
-  android-release:
-    name: NEXWALL Android Release Build
+  android-nexwall:
+    name: NEXWALL CI/CD Build
 
     max_build_duration: 60
 
     environment:
       java: 17
 
-      # Android SDK setup
+      # ✅ IMPORTANT: THIS MUST MATCH CODemagic UI keystore name
       android_signing:
         - keystore_reference
 
@@ -20,15 +20,17 @@ workflows:
         - ~/.gradle/wrapper
 
     scripts:
-      - name: Set permissions
+      - name: Grant permission
         script: chmod +x gradlew
 
       - name: Clean project
         script: ./gradlew clean
 
+      # Debug APK (always works)
       - name: Build Debug APK
         script: ./gradlew assembleDebug
 
+      # Release AAB (Play Store)
       - name: Build Release AAB
         script: ./gradlew bundleRelease
 
