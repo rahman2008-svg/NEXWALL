@@ -15,6 +15,7 @@ cache:
 triggering:
   events:
     - push
+      pull_request
   branch_patterns:
     - pattern: main
       include: true
@@ -28,7 +29,7 @@ scripts:
     script: |
       chmod +x gradlew
 
-  - name: Show Gradle Version
+  - name: Verify Gradle Wrapper
     script: |
       ./gradlew --version
 
@@ -38,13 +39,17 @@ scripts:
 
   - name: Build Debug APK
     script: |
-      ./gradlew assembleDebug --stacktrace
+      ./gradlew assembleDebug --stacktrace --warning-mode all
 
 artifacts:
-  - app/build/outputs/**/*.apk
-  - app/build/outputs/**/*.aab
+  - app/build/outputs/apk/**/*.apk
+  - app/build/outputs/bundle/**/*.aab
+  - app/build/reports/**
 
 publishing:
   email:
     recipients:
       - your-email@example.com
+    notify:
+      success: true
+      failure: true
