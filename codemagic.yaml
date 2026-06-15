@@ -1,18 +1,14 @@
 workflows:
   android-nexwall:
-    name: NEXWALL CI/CD Build
+    name: NEXWALL Build
 
     max_build_duration: 60
 
     environment:
       java: 17
 
-      # ✅ IMPORTANT: THIS MUST MATCH CODemagic UI keystore name
       android_signing:
         - keystore_reference
-
-      vars:
-        PACKAGE_NAME: "com.aistudio.nexwallstudiox.kdwpzb"
 
     cache:
       cache_paths:
@@ -20,25 +16,11 @@ workflows:
         - ~/.gradle/wrapper
 
     scripts:
-      - name: Grant permission
-        script: chmod +x gradlew
-
-      - name: Clean project
-        script: ./gradlew clean
-
-      # Debug APK (always works)
-      - name: Build Debug APK
-        script: ./gradlew assembleDebug
-
-      # Release AAB (Play Store)
-      - name: Build Release AAB
-        script: ./gradlew bundleRelease
+      - chmod +x gradlew
+      - ./gradlew clean
+      - ./gradlew assembleDebug
+      - ./gradlew bundleRelease
 
     artifacts:
       - app/build/outputs/**/*.apk
       - app/build/outputs/**/*.aab
-
-    publishing:
-      email:
-        recipients:
-          - "dev@nexvora.com"
