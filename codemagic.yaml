@@ -2,12 +2,11 @@ workflows:
   nexwall-studio-x:
     name: "NexWall Studio X Android Build"
     max_build_duration: 60
-    instance_type: mac_mini_m2  # or linux_medium / mac_mini for faster builds
+    instance_type: mac_mini_m2   # Faster builds (you can change to linux_medium if you prefer)
+
     environment:
       java: 17
-      # Add NDK if needed: ndk: r26b (check your build.gradle)
-      # vars:
-      #   - ANDROID_SDK_VERSION: "34"  # example
+      # ndk: r26b                  # Uncomment if your project uses NDK
 
     cache:
       cache_paths:
@@ -26,34 +25,23 @@ workflows:
       - name: Grant execute permission
         script: chmod +x gradlew
 
-      - name: Verify Gradle & Environment
+      - name: Verify Gradle
         script: ./gradlew --version
 
-      - name: Clean
+      - name: Clean project
         script: ./gradlew clean
-
-      # Optional: Run tests
-      # - name: Run unit tests
-      #   script: ./gradlew testDebugUnitTest
 
       - name: Build Debug APK
         script: ./gradlew assembleDebug --stacktrace
 
-      - name: Build Release AAB (for Play Store)
-        script: |
-          ./gradlew bundleRelease --stacktrace
-        # Or assembleRelease if you prefer APKs
+      - name: Build Release AAB
+        script: ./gradlew bundleRelease --stacktrace
 
     artifacts:
-      - path: app/build/outputs/**/*.apk
-      - path: app/build/outputs/**/*.aab
+      - app/build/outputs/**/*.apk
+      - app/build/outputs/**/*.aab
 
     publishing:
       email:
         recipients:
           - your-email@example.com
-      # Google Play publishing (highly recommended)
-      # google_play:
-      #   credentials: $GCLOUD_SERVICE_ACCOUNT  # Add via Codemagic UI > Environment variables
-      #   track: internal  # or alpha/beta/production
-      #   package_name: your.package.name
