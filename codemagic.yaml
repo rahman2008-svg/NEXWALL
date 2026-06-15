@@ -1,7 +1,6 @@
-
 workflows:
 nexwall-studio-x:
-name: NexWall Studio X Android Build
+name: "NexWall Studio X Android Build"
 
 max_build_duration: 60
 
@@ -28,11 +27,11 @@ scripts:
     script: |
       chmod +x gradlew
 
-  - name: Verify Gradle Wrapper
+  - name: Verify Gradle
     script: |
       ./gradlew --version
 
-  - name: Clean
+  - name: Clean project
     script: |
       ./gradlew clean
 
@@ -43,12 +42,8 @@ scripts:
 artifacts:
   - app/build/outputs/**/*.apk
   - app/build/outputs/**/*.aab
-  - app/build/reports/**/*
 
 publishing:
   email:
     recipients:
-      - your-email@example.com
-    notify:
-      success: true
-      failure: true
+      - example@gmail.com
