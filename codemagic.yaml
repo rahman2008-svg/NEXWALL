@@ -1,3 +1,4 @@
+
 workflows:
 nexwall-studio-x:
 name: NexWall Studio X Android Build
@@ -23,17 +24,21 @@ triggering:
       source: true
 
 scripts:
-  - name: Grant Execute Permission
-    script: chmod +x gradlew
+  - name: Grant execute permission
+    script: |
+      chmod +x gradlew
 
-  - name: Check Gradle
-    script: ./gradlew --version
+  - name: Verify Gradle Wrapper
+    script: |
+      ./gradlew --version
 
-  - name: Clean Project
-    script: ./gradlew clean
+  - name: Clean
+    script: |
+      ./gradlew clean
 
   - name: Build Debug APK
-    script: ./gradlew assembleDebug --stacktrace
+    script: |
+      ./gradlew assembleDebug --stacktrace
 
 artifacts:
   - app/build/outputs/**/*.apk
@@ -44,3 +49,6 @@ publishing:
   email:
     recipients:
       - your-email@example.com
+    notify:
+      success: true
+      failure: true
